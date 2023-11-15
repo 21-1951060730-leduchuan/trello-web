@@ -14,12 +14,12 @@ import TextField from "@mui/material/TextField";
 import Badge from "@mui/material/Badge";
 import Tooltip from "@mui/material/Tooltip";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 
 import Profile from "./Menus/Profiles";
 function AppBar() {
   return (
     <Box
-      px={2}
       sx={{
         height: (theme) => theme.trello.appBarHeight,
         width: "100%",
@@ -27,7 +27,8 @@ function AppBar() {
         alignItems: "center",
         justifyContent: "space-between",
         gap: 2,
-        overflowX:'auto'
+        paddingX: 2,
+        overflowX: "auto",
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
@@ -35,7 +36,8 @@ function AppBar() {
         <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
           <SvgIcon
             component={TrelloLogo}
-            inheritViewBoxfontSize="small"
+            inheritViewBox
+            fontSize="small"
             sx={{ color: "primary.main" }}
           />
           <Typography
@@ -53,7 +55,9 @@ function AppBar() {
             <Recent />
             <Starred />
             <Template />
-            <Button variant="outlined">Create</Button>
+            <Button variant="outlined" startIcon={<LibraryAddIcon />}>
+              Create
+            </Button>
           </Box>
         </Box>
       </Box>
