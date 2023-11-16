@@ -25,13 +25,13 @@ function Profile() {
         <IconButton
           onClick={handleClick}
           size="small"
-          sx={{ padding: 0 }}
+          sx={{ padding: 0, color: "white" }}
           aria-controls={open ? "basic-menu-profiles" : undefined}
           aria-haspopup="true"
           aria-expanded={open ? "true" : undefined}
         >
           <Avatar
-            sx={{ width: "30px", height: "30px" }}
+            sx={{ width: "36px", height: "36px" }}
             alt="Huấn Lê"
             src="https://scontent.fhan17-1.fna.fbcdn.net/v/t39.30808-6/373627810_271341892418607_8970231156656147667_n.jpg?stp=cp6_dst-jpg&_nc_cat=106&ccb=1-7&_nc_sid=5f2048&_nc_ohc=bldHRvZu03MAX8vTvr5&_nc_ht=scontent.fhan17-1.fna&oh=00_AfCKPcNXukyGfwkk-AWEUffa3XWXyMPptf2VRCKibdQH4A&oe=65589CE1"
           />

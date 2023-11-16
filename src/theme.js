@@ -1,4 +1,4 @@
-import { teal, cyan, orange, deepOrange } from "@mui/material/colors";
+// import { teal, cyan, orange, deepOrange } from "@mui/material/colors";
 import { experimental_extendTheme as extendTheme } from "@mui/material/styles";
 
 // Create a theme instance.
@@ -8,19 +8,19 @@ const theme = extendTheme({
     boardBarHeight: "60px",
   },
   colorSchemes: {
-    light: {
-      palette: {
-        primary: teal,
-        secondary: deepOrange,
-      },
-    },
-    dark: {
-      palette: {
-        primary: cyan,
-        secondary: orange,
-      },
-    },
-    // ...other
+    // light: {
+    //   palette: {
+    //     primary: teal,
+    //     secondary: deepOrange,
+    //   },
+    // },
+    // dark: {
+    //   palette: {
+    //     primary: cyan,
+    //     secondary: orange,
+    //   },
+    // },
+    // // ...other
   },
   components: {
     //
@@ -31,59 +31,57 @@ const theme = extendTheme({
         root: {
           // Some CSS
           textTransform: "none",
+          borderWidth: "0.5px",
+          "&:hover": {
+            borderWidth: "1px",
+          },
         },
       },
     },
     MuiInputLabel: {
       styleOverrides: {
         // Name of the slot
-        root: ({ theme }) => ({
-          color: theme.palette.primary.main,
+        root: {
           fontSize: "0.875rem",
-        }),
+        },
       },
     },
     MuiOutlinedInput: {
       styleOverrides: {
         // Name of the slot
-        root: ({ theme }) => {
-          return {
-            color: theme.palette.primary.main,
-            fontSize: "0.875rem",
-            ".MuiOutlinedInput-notchedOutline": {
-              borderColor: theme.palette.primary.light,
-            },
-            "&:hover": {
-              ".MuiOutlinedInput-notchedOutline": {
-                borderColor: theme.palette.primary.main,
-              },
-            },
-            // loai bỏ in đậm của input
-            // '& fieldset':{
-            //   borderWidth:'1px !important'
-            // }
-          };
+        root: {
+          fontSize: "0.875rem",
+
+          "& fieldset": {
+            borderWidth: "1px !important",
+          },
+          "& fieldset:hover": {
+            borderWidth: "1px !important",
+          },
+          "&.Mui-focused fieldset": {
+            borderWidth: "1px !important",
+          },
         },
       },
     },
-    // MuiCssBaseline: {
-    //   styleOverrides: {
-    //     body: {
-    //       // css cho tất cả scroll bar
-    //       "*::-webkit-scrollbar": {
-    //         width: "8px",
-    //         height: "8px",
-    //       },
-    //       "*::-webkit-scrollbar-thumb": {
-    //         backGroundColor: "#c0392b",
-    //         borderRadius: "8px",
-    //       },
-    //       "*::-webkit-scrollbar-thumb:hover": {
-    //         backGroundColor: "red",
-    //       },
-    //     },
-    //   },
-    // },
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          // css cho tất cả scroll bar
+          "*::-webkit-scrollbar": {
+            width: "8px",
+            height: "8px",
+          },
+          "*::-webkit-scrollbar-thumb": {
+            backGroundColor: "#dedde1",
+            borderRadius: "8px",
+          },
+          "*::-webkit-scrollbar-thumb:hover": {
+            backGroundColor: "white",
+          },
+        },
+      },
+    },
   },
 });
 
