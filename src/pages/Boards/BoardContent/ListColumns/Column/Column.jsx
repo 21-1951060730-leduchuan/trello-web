@@ -17,8 +17,11 @@ import ContentCopy from "@mui/icons-material/ContentCopy";
 import ContentPaste from "@mui/icons-material/ContentPaste";
 import { Button } from "@mui/material";
 import ListCards from "./ListCards/ListCards";
+import { mapOrder } from "~/utils/sorts";
 
-function Column() {
+function Column({ column }) {
+  const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, "_id"); //sap xep keo tha theo _id cua column
+
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -55,7 +58,7 @@ function Column() {
           sx={{ fontSize: "1rem", fontWeight: "bold", cursor: "pointer" }}
           variant="h6"
         >
-          Column Title
+          {column?.title}
         </Typography>
         <Box>
           <Box>
@@ -121,7 +124,7 @@ function Column() {
         </Box>
       </Box>
       {/* box column list card */}
-      <ListCards />
+      <ListCards cards={orderedCards} />
       {/* box column footer */}
 
       <Box
