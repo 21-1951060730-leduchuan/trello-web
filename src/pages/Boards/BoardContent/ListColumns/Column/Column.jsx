@@ -18,9 +18,19 @@ import ContentPaste from "@mui/icons-material/ContentPaste";
 import { Button } from "@mui/material";
 import ListCards from "./ListCards/ListCards";
 import { mapOrder } from "~/utils/sorts";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 function Column({ column }) {
   const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, "_id"); //sap xep keo tha theo _id cua column
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: column._id, data: { ...column } });
+
+  const dndKitColumnStyles = {
+    // touchAction:'none',// danhcho sensor default dang Pointersensor
+    transform: CSS.Translate.toString(transform), //Neu dung  transform: CSS.Transform.toString(transform) thi gap loi  stretch
+    transition,
+  };
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -32,6 +42,10 @@ function Column({ column }) {
   };
   return (
     <Box
+      ref={setNodeRef}
+      style={dndKitColumnStyles}
+      {...attributes}
+      {...listeners}
       sx={{
         minWidth: "300PX",
         maxWidth: "300px",
