@@ -57,7 +57,70 @@ function BoardContent({ board }) {
       column?.cards?.map((card) => card._id)?.includes(cardId)
     );
   };
-
+  const moveCardBeetweenDifferentColumns = (
+    overColumn,
+    overCardId,
+    active,
+    over,
+    activeColumn,
+    activeDraggingCardId,
+    activeDraggingCardData
+  ) => {
+    setOrderedColumns((prevColumns) => {
+      //tim vi tri index cua overCard trong column dich(noi ma activeCard  sap duoc tha)
+      const OverCardIndex = overColumn?.cards?.findIndex(
+        (card) => card._id === overCardId
+      );
+      // logic tinh toan  'cardIndex' moi tren hoac duoi overCard
+      let newCardIndex;
+      const isBelowOverItem =
+        active.rect.current.translated &&
+        active.rect.current.translated.top > over.rect.top + over.rect.height;
+      const modifier = isBelowOverItem ? 1 : 0;
+      newCardIndex =
+        OverCardIndex >= 0
+          ? OverCardIndex + modifier
+          : overColumn?.cards?.length + 1;
+      //clone mang oderColumnState cu ra 1 mang moi de xu li roi return- cap nhat laij oderColumnState moi
+      const nextColumns = cloneDeep(prevColumns);
+      const nextActiveColumn = nextColumns.find(
+        (column) => column._id === activeColumn._id
+      );
+      const nextOverColumn = nextColumns.find(
+        (column) => column._id === overColumn._id
+      );
+      if (nextActiveColumn) {
+        //xoa card o column active
+        nextActiveColumn.cards = nextActiveColumn.cards.filter(
+          (card) => card._id !== activeDraggingCardId
+        );
+        //cap nhat bang cardOderIds
+        nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map(
+          (card) => card._id
+        );
+      }
+      if (nextOverColumn) {
+        //kiem tra xem card dang keo co ton tai o overColumn k , neu co thi xoa no trc
+        nextOverColumn.cards = nextOverColumn.cards.filter(
+          (card) => card._id !== activeDraggingCardId
+        );
+        // phai cap nhat lai chuan du lieu columnId trong card sau khi keo card giua 2 column khac nhau
+        const rebuild_activeDraggingCardData = {
+          ...activeDraggingCardData,
+          columnId: nextOverColumn._id,
+        };
+        nextOverColumn.cards = nextOverColumn.cards.toSpliced(
+          newCardIndex,
+          0,
+          rebuild_activeDraggingCardData
+        );
+        nextOverColumn.cardOrderIds = nextOverColumn.cards.map(
+          (card) => card._id
+        );
+      }
+      return nextColumns;
+    });
+  };
   const handleDragStart = (event) => {
     setActiveDragItemsId(event?.active?.id);
     setActiveDragItemType(
@@ -95,56 +158,15 @@ function BoardContent({ board }) {
 
     //khi keo 2 column khac nhau thi code vao day c
     if (activeColumn._id !== overColumn._id) {
-      setOrderedColumns((prevColumns) => {
-        //tim vi tri index cua overCard trong column dich(noi ma activeCard  sap duoc tha)
-        const OverCardIndex = overColumn?.cards?.findIndex(
-          (card) => card._id === overCardId
-        );
-        // logic tinh toan  'cardIndex' moi tren hoac duoi overCard
-        let newCardIndex;
-        const isBelowOverItem =
-          active.rect.current.translated &&
-          active.rect.current.translated.top > over.rect.top + over.rect.height;
-        const modifier = isBelowOverItem ? 1 : 0;
-        newCardIndex =
-          OverCardIndex >= 0
-            ? OverCardIndex + modifier
-            : overColumn?.cards?.length + 1;
-        //clone mang oderColumnState cu ra 1 mang moi de xu li roi return- cap nhat laij oderColumnState moi
-        const nextColumns = cloneDeep(prevColumns);
-        const nextActiveColumn = nextColumns.find(
-          (column) => column._id === activeColumn._id
-        );
-        const nextOverColumn = nextColumns.find(
-          (column) => column._id === overColumn._id
-        );
-        if (nextActiveColumn) {
-          //xoa card o column active
-          nextActiveColumn.cards = nextActiveColumn.cards.filter(
-            (card) => card._id !== activeDraggingCardId
-          );
-          //cap nhat bang cardOderIds
-          nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map(
-            (card) => card._id
-          );
-        }
-        if (nextOverColumn) {
-          //kiem tra xem card dang keo co ton tai o overColumn k , neu co thi xoa no trc
-          nextOverColumn.cards = nextOverColumn.cards.filter(
-            (card) => card._id !== activeDraggingCardId
-          );
-          //them card dang keo vao vi tri index moi
-          nextOverColumn.cards = nextOverColumn.cards.toSpliced(
-            newCardIndex,
-            0,
-            activeDraggingCardData
-          );
-          nextOverColumn.cardOrderIds = nextOverColumn.cards.map(
-            (card) => card._id
-          );
-        }
-        return nextColumns;
-      });
+      moveCardBeetweenDifferentColumns(
+        overColumn,
+        overCardId,
+        active,
+        over,
+        activeColumn,
+        activeDraggingCardId,
+        activeDraggingCardData
+      );
     }
   };
 
@@ -167,7 +189,15 @@ function BoardContent({ board }) {
       if (!activeColumn || !overColumn) return;
 
       if (oldColumnWhenDraggingCard._id !== overColumn._id) {
-        //
+        moveCardBeetweenDifferentColumns(
+          overColumn,
+          overCardId,
+          active,
+          over,
+          activeColumn,
+          activeDraggingCardId,
+          activeDraggingCardData
+        );
       } else {
         // hanh dong keo tha card trong cung 1 column
         const oldCardIndex = oldColumnWhenDraggingCard?.cards.findIndex(
