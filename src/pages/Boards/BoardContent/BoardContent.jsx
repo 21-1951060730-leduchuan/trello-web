@@ -14,9 +14,13 @@ import {
   DragOverlay,
   defaultDropAnimationSideEffects,
   closestCorners,
+  pointerWithin,
+  rectIntersection,
+  getFirstCollision,
+  closestCenter,
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
-import { useEffect, useState } from "react";
+import { useRef, useCallback, useEffect, useState } from "react";
 
 const ACTIVE_DRAG_ITEM_TYPE = {
   COLUMN: "ACTIVE_DRAG_ITEM_TYPE_COLUMN",
@@ -46,6 +50,8 @@ function BoardContent({ board }) {
   const [activeDragItemData, setActiveDragItemData] = useState(null);
   const [oldColumnWhenDraggingCard, setOldColumnWhenDraggingCard] =
     useState(null);
+  // diem va cham cuoi cung (xu li thuat toan va cham 37)
+  const lastOverId = useRef(null);
 
   useEffect(() => {
     //sap xep keo tha theo _id cua column
@@ -260,12 +266,41 @@ function BoardContent({ board }) {
       },
     }),
   };
+  const collisionDetectionStratery = useCallback(
+    (args) => {
+      if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
+        return closestCorners({ ...args });
+      }
+      const pointerIntersections = pointerWithin(args);
+      // eslint-disable-next-line no-extra-boolean-cast
+      const intersections = !!pointerIntersections?.length
+        ? pointerIntersections
+        : rectIntersection(args);
+      let overId = getFirstCollision(intersections, "id");
+      if (overId) {
+        const checkColumn = orderedColumns.find((c) => c._id === overId);
+        if (checkColumn) {
+          overId = closestCenter({
+            ...args,
+            droppableContainers: args.droppableContainers.filter(
+              (container) =>{ return (container._id !== overId) && (checkColumn?.cardOrderIds?.includes(container.id))}
+            ),
+          })[0]?.id;
+        }
 
+        lastOverId.current = overId;
+        return [{ id: overId }];
+      }
+      // neu overId null t hi tra ve mang rong
+      return lastOverId.current ? [{ id: lastOverId.current }] : [];
+    },
+    [activeDragItemType, orderedColumns]
+  );
   return (
     <DndContext
       //cam bien
       sensors={sensors}
-      collisionDetection={closestCorners} //thuat toan phai hien va cham cua dndkit
+      collisionDetection={collisionDetectionStratery} //thuat toan phai hien va cham cua dndkit update 37
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
