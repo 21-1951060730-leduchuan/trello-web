@@ -123,7 +123,9 @@ function BoardContent({ board }) {
           0,
           rebuild_activeDraggingCardData
         );
-        nextOverColumn.cards = nextOverColumn.cards.filter(card => !card.FE_PlaceholderCard)
+        nextOverColumn.cards = nextOverColumn.cards.filter(
+          (card) => !card.FE_PlaceholderCard
+        );
         nextOverColumn.cardOrderIds = nextOverColumn.cards.map(
           (card) => card._id
         );
@@ -333,12 +335,12 @@ function BoardContent({ board }) {
           {!activeDragItemType && null}
           {activeDragItemId &&
             activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN && (
-              <Column column={activeDragItemData} />
-            )}
+            <Column column={activeDragItemData} />
+          )}
           {activeDragItemId &&
             activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD && (
-              <Card card={activeDragItemData} />
-            )}
+            <Card card={activeDragItemData} />
+          )}
         </DragOverlay>
       </Box>
     </DndContext>
