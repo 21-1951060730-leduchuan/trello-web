@@ -22,19 +22,22 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import TextField from "@mui/material/TextField";
 import CloseIcon from "@mui/icons-material/Close";
-
-function Column({ column }) {
+import { toast } from "react-toastify";
+function Column({ column, createNewCard }) {
   //add card
   const [openNewCardForm, setOpenNewCardForm] = useState(false);
   const [newCardTitle, setNewCardTitle] = useState("");
 
   const toggleOpenNewCardForm = () => setOpenNewCardForm(!openNewCardForm);
-  const addNewCard = () => {
+  const addNewCard = async () => {
     if (!newCardTitle) {
-      // console.log("please enter column title");
+      toast.error("please enter card title");
       return;
       //goi api
     }
+    const newCardData = { title: newCardTitle, columnId: column._id };
+    await createNewCard(newCardData);
+
     toggleOpenNewCardForm();
     setNewCardTitle("");
   };
@@ -258,7 +261,7 @@ function Column({ column }) {
                     },
                   }}
                 >
-                  Add 
+                  Add
                 </Button>
                 <CloseIcon
                   fontSize="small"
