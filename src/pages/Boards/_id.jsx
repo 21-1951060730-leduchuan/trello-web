@@ -10,6 +10,7 @@ import {
   createNewCardAPI,
   createNewColumnAPI,
   fetchBoardDetails_API,
+  moveCardToDiffentColumnAPI,
   updateBoardDetails_API,
   updateColumnDetailsAPI,
 } from "~/apis";
@@ -99,6 +100,31 @@ function Board() {
     //update api column
     updateColumnDetailsAPI(columnId, { cardOrderIds: dndOrderedCardIds });
   };
+  //khi di chuyen card sang column khac
+  // b1 : cap nhat mang cardOrderIds cua column ban dau chua no (xoa no ra khoi mang ban dau)
+  // b2 : cap nhat mang cardOrderIds cua column  tiep theo (them no vao mang moi)
+  // b3 : cap nhat truong columnId CUA CARD da keo
+  // => api sp rieng
+  const moveCardToDifferentColumn = (
+    currentCardId,
+    prevColumnId,
+    nextColumnId,
+    dndOrderedColumns
+  ) => {
+    const dndOrderedColumnsIds = dndOrderedColumns.map((c) => c._id);
+    const newBoard = { ...board };
+    newBoard.columns = dndOrderedColumns;
+    newBoard.columnOrderIds = dndOrderedColumnsIds;
+    setBoard(newBoard);
+    //goi api phia BE
+    moveCardToDiffentColumnAPI({
+      currentCardId,
+      prevColumnId,
+      prevCardOrderIds: dndOrderedColumns.find((c) => c._id === prevColumnId)?.cardOrderIds,
+      nextColumnId,
+      nextCardOrderIds:dndOrderedColumns.find((c) => c._id === nextColumnId)?.cardOrderIds,
+    })
+  };
   if (!board) {
     return (
       <Box
@@ -111,7 +137,7 @@ function Board() {
           height: "100vh",
         }}
       >
-        <CircularProgress/>
+        <CircularProgress />
         <Typography>Loading Board...</Typography>
       </Box>
     );
@@ -126,6 +152,7 @@ function Board() {
         createNewCard={createNewCard}
         moveColumns={moveColumns}
         moveCardInTheSameColumn={moveCardInTheSameColumn}
+        moveCardToDifferentColumn={moveCardToDifferentColumn}
       />
     </Container>
   );
