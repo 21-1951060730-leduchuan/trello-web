@@ -17,14 +17,14 @@ function ListColumns({ columns, createNewColumn, createNewCard }) {
 
   const toggleOpenNewColumnForm = () =>
     setOpenNewColumnForm(!openNewColumnForm);
-  const addNewColumn = async () => {
+  const addNewColumn = () => {
     if (!newColumnTitle) {
       toast.error("please enter column title");
       return;
       //goi api
     }
     const newColumnData = { title: newColumnTitle };
-    await createNewColumn(newColumnData);
+    createNewColumn(newColumnData);
     toggleOpenNewColumnForm();
     setNewColumnTitle("");
   };

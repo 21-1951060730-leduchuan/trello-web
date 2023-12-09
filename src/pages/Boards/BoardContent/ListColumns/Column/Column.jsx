@@ -17,7 +17,7 @@ import ContentCopy from "@mui/icons-material/ContentCopy";
 import ContentPaste from "@mui/icons-material/ContentPaste";
 import { Button } from "@mui/material";
 import ListCards from "./ListCards/ListCards";
-import { mapOrder } from "~/utils/sorts";
+
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import TextField from "@mui/material/TextField";
@@ -29,20 +29,20 @@ function Column({ column, createNewCard }) {
   const [newCardTitle, setNewCardTitle] = useState("");
 
   const toggleOpenNewCardForm = () => setOpenNewCardForm(!openNewCardForm);
-  const addNewCard = async () => {
+  const addNewCard = () => {
     if (!newCardTitle) {
       toast.error("please enter card title");
       return;
       //goi api
     }
     const newCardData = { title: newCardTitle, columnId: column._id };
-    await createNewCard(newCardData);
+    createNewCard(newCardData);
 
     toggleOpenNewCardForm();
     setNewCardTitle("");
   };
 
-  const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, "_id"); //sap xep keo tha theo _id cua column
+  const orderedCards = column?.cards; //sap xep keo tha theo _id cua column
   const {
     attributes,
     listeners,
@@ -210,6 +210,7 @@ function Column({ column, createNewCard }) {
                 // value={searchValue}
                 variant="outlined"
                 autoFocus
+                data-no-dnd="true"
                 // onChange={(e) => setSearchValue(e.target.value)}
                 // type="search" dung de tao dau X khi nguoi dung muon xoa du lieu trong o input
                 type="text"
