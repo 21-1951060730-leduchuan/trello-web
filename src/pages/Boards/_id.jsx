@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import {
   createNewCardAPI,
   createNewColumnAPI,
+  deleteColumnDetailsAPI,
   fetchBoardDetails_API,
   moveCardToDiffentColumnAPI,
   updateBoardDetails_API,
@@ -17,6 +18,7 @@ import {
 
 import { isEmpty } from "lodash";
 import { generatePlaceholderCard } from "~/utils/formatter";
+import { toast } from "react-toastify";
 function Board() {
   const [board, setBoard] = useState(null);
   useEffect(() => {
@@ -137,6 +139,17 @@ function Board() {
         ?.cardOrderIds,
     });
   };
+  const deleteColumnDetails = (columnId) => {
+    const newBoard = { ...board };
+    newBoard.columns = newBoard.columns.filter((c) => c._id !== columnId);
+    newBoard.columnOrderIds = newBoard.columnOrderIds.filter(
+      (_id) => _id !== columnId
+    );
+    setBoard(newBoard);
+    deleteColumnDetailsAPI(columnId).then((res) => {
+      toast.success(res?.deleteResult);
+    });
+  };
   if (!board) {
     return (
       <Box
@@ -165,6 +178,7 @@ function Board() {
         moveColumns={moveColumns}
         moveCardInTheSameColumn={moveCardInTheSameColumn}
         moveCardToDifferentColumn={moveCardToDifferentColumn}
+        deleteColumnDetails={deleteColumnDetails}
       />
     </Container>
   );

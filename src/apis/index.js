@@ -13,6 +13,7 @@ export const updateBoardDetails_API = async (boardId, updateData) => {
   //axios tra ve ket qua thong qua property cua no la data
   return response.data;
 };
+
 export const moveCardToDiffentColumnAPI = async (updateData) => {
   const response = await axios.put(
     `${API_ROOT}/v1/boards/supports/moving_card`,
@@ -26,7 +27,12 @@ export const updateColumnDetailsAPI = async (columnId, updateData) => {
     `${API_ROOT}/v1/columns/${columnId}`,
     updateData
   );
-  //axios tra ve ket qua thong qua property cua no la data
+  return response.data;
+};
+export const deleteColumnDetailsAPI = async (columnId) => {
+  const response = await axios.delete(
+    `${API_ROOT}/v1/columns/${columnId}`
+  );
   return response.data;
 };
 export const createNewColumnAPI = async (newColumnData) => {
