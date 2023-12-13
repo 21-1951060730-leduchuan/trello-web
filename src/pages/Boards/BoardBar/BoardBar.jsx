@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import DashBoardIcon from "@mui/icons-material/DashBoard";
+// import DashBoardIcon from "@mui/icons-material/DashBoard";
 import VpnLockIcon from "@mui/icons-material/VpnLock";
 import AddToDriveIcon from "@mui/icons-material/AddToDrive";
 import BoltIcon from "@mui/icons-material/Bolt";
@@ -45,7 +45,7 @@ function BoardBar({ board }) {
         <Tooltip title={board?.description}>
           <Chip
             sx={MENU_STYLE}
-            icon={<DashBoardIcon />}
+            // icon={<DashBoardIcon />}
             clickable
             label={board?.title}
           />
